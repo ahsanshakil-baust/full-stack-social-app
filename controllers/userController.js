@@ -19,7 +19,6 @@ const createUser = async (req, res) => {
         successMsg: "User Created Successfully!",
       });
     } catch (error) {
-      console.error("Error creating user:", error);
       res.status(500).json({
         errMsg: "Error creating user",
       });

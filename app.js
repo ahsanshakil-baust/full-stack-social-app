@@ -3,6 +3,7 @@ const cors = require("cors");
 const sequelize = require("./db/db");
 const userRouter = require("./routes/userRoute");
 const postRouter = require("./routes/postRouter");
+const commentRouter = require("./routes/commentRouter");
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(cors());
 
 app.use("/user", userRouter);
 app.use("/post", postRouter);
+app.use("/comment", commentRouter);
 
 sequelize
   .sync()
@@ -20,4 +22,4 @@ sequelize
       console.log("Server Running...");
     })
   )
-  .catch(() => console.log("Server Can't run for some reason..."));
+  .catch((err) => console.log(err.message));
