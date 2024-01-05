@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../model/userModel");
 const { createJwt } = require("../utils/jwt");
+const uploadFileToDrive = require("../utils/uploadToDrive");
 
 const createUser = async (req, res) => {
   const { username, email, password, cpassword } = req.body;
@@ -54,8 +55,30 @@ const getUser = (req, res) => {
   }
 };
 
+const uploadImage = async (req, res) => {
+  try {
+    const { filename } = req.file;
+    const userId = req.user.id;
+    const imgUrl = await uploadFileToDrive(`uploads/${filename}`, filename);
+
+    const saveFile = await User.update({
+      image: imgUrl,
+      where: {
+        id: userId,
+      },
+    });
+
+    res
+      .status(201)
+      .json({ message: "File uploaded successfully", file: saveFile });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
   getUser,
+  uploadImage,
 };
