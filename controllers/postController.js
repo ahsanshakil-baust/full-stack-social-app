@@ -26,10 +26,6 @@ const createPost = async (req, res) => {
 
 const getAllPostsWithUsers = async (req, res) => {
   try {
-    // const posts = await Post.findAll({
-    //   include: { model: User },
-    // });
-
     const posts = await Post.findAll({
       include: [
         {
