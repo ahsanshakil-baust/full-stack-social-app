@@ -1,17 +1,21 @@
-// googleDrive.js
+const stream = require("stream");
 const { google } = require("googleapis");
-const fs = require("fs");
 
-// Google Drive setup...
-
-async function uploadToDrive(file) {
-  // Google Drive API logic for uploading the file...
-
-  // After successful upload, return the file's URL
-  return {
-    driveURL: "YOUR_GOOGLE_DRIVE_FILE_URL", // Replace with the actual URL
-    fileId: "YOUR_GOOGLE_DRIVE_FILE_ID", // Replace with the actual file ID
-  };
-}
+const uploadToDrive = async (fileObject) => {
+  const bufferStream = new stream.PassThrough();
+  bufferStream.end(fileObject.buffer);
+  const { data } = await google.drive({ version: "v3" }).files.create({
+    media: {
+      mimeType: fileObject.mimeType,
+      body: bufferStream,
+    },
+    requestBody: {
+      name: fileObject.originalname,
+      parents: ["DRIVE_FOLDER_ID"],
+    },
+    fields: "id,name",
+  });
+  console.log(`Uploaded file ${data.name} ${data.id}`);
+};
 
 module.exports = { uploadToDrive };

@@ -1,7 +1,8 @@
 const bcrypt = require("bcrypt");
 const User = require("../model/userModel");
 const { createJwt } = require("../utils/jwt");
-const { uploadToDrive } = require("./googleDrive");
+// const { uploadToDrive } = require("./googleDrive");
+const { google } = require("googleapis");
 
 const createUser = async (req, res) => {
   const { username, email, password, cpassword } = req.body;
@@ -57,22 +58,16 @@ const getUser = (req, res) => {
 
 const uploadImage = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded" });
+    const { body, files } = req;
+
+    for (let f = 0; f < files.length; f += 1) {
+      await uploadFile(files[f]);
     }
 
-    const uploadedFile = await uploadToDrive(req.file);
-
-    // Store image details in the database
-    const image = await Image.create({
-      name: req.file.originalname,
-      driveURL: uploadedFile.driveURL, // Save Google Drive URL
-    });
-
-    return res.status(200).json({ image });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Internal server error" });
+    console.log(body);
+    res.status(200).send("Form Submitted");
+  } catch (f) {
+    res.send(f.message);
   }
 };
 
