@@ -11,7 +11,7 @@ const uploadToDrive = async (fileObject) => {
     },
     requestBody: {
       name: fileObject.originalname,
-      parents: ["DRIVE_FOLDER_ID"],
+      parents: ["1iEYXrfA7VyvUKyDczLlUPN3yAqH_aWLt"],
     },
     fields: "id,name",
   });
